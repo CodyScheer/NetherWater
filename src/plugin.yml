@@ -1,0 +1,28 @@
+name: NetherWater
+version: 1.0.0
+description: Allow players to use water in the nether
+author: Lee Tzilantonis
+main: com.leetzilantonis.netherwater.Main
+database: false
+commands:
+  nwreload:
+    description: Reload the Nether Water configuration
+    aliases: [nwr]
+    permission: netherwater.reload
+    usage: Something went wrong, You shouldnt be seeing this AT ALL
+permissions:
+  netherwater.use.*:
+    description: Allows players to use water in all non disabled nether worlds
+    default: op
+  netherwater.*:
+    description: Allows use of every feature in the plugin
+    children:
+      netherwater.use.*: true
+      netherwater.world.bypass: true
+      netherwater.reload: true
+  netherwater.world.bypass:
+    description: Allows players to bypass the disabled worlds and place water
+    default: op
+  netherwater.reload:
+    description: Allows players to reload the configuration
+    default: op
