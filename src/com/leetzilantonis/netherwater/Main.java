@@ -1,10 +1,10 @@
 package com.leetzilantonis.netherwater;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,22 +13,19 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {
 
-	List<String> dWorlds = new ArrayList<String>();
+	private static List<String> dWorlds = new ArrayList<String>();
+	private static Main plugin;
 	private WorldGuardPlugin wg;
 
 	@Override
 	public void onEnable() {
 
-		FileConfiguration c = this.getConfig();
-		if (c.contains("disabledWorlds")) {
-			List<String> worlds = new ArrayList<String>();
-			worlds.add("noWaterWorld");
-			c.addDefault("disabledWorlds", worlds);
-			c.options().copyDefaults(true);
-		}
-		this.saveConfig();
+		plugin = this;
+		
+		if(!getDataFolder().exists()) getDataFolder().mkdir();
+        if(!new File(getDataFolder(), "config.yml").exists()) saveDefaultConfig();
 
-		dWorlds = c.getStringList("disabledWorlds");
+		dWorlds = this.getConfig().getStringList("disabledWorlds");
 
 		wg = this.getWorldGuard();
 
@@ -38,15 +35,15 @@ public class Main extends JavaPlugin {
 
 		}
 
-		this.getServer().getPluginManager().registerEvents(new WaterPlaceListener(this), this);
-		this.getCommand("nwreload").setExecutor(new NWReloadCommand(this));
+		this.getServer().getPluginManager().registerEvents(new WaterPlaceListener(), this);
+		this.getCommand("nwreload").setExecutor(new NWReloadCommand());
 
 	}
 
 	@Override
 	public void onDisable() {
 
-		this.saveConfig();
+		plugin = null;
 
 	}
 
@@ -62,7 +59,18 @@ public class Main extends JavaPlugin {
 	}
 	
 	public boolean canBuild(Player p, Block b) {
+		if (wg == null) {
+			return true;
+		}
 		return wg.canBuild(p, b);
 	}
+	
+	public static Main getInstance() {
+		return plugin;
+	}
 
+	public List<String> getWorlds() {
+		return dWorlds;
+	}
+	
 }
