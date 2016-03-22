@@ -18,6 +18,9 @@ public class WaterPlaceListener implements Listener {
 		if (e.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
 
+		if (e.getItem() == null)
+			return;
+
 		World w = e.getClickedBlock().getWorld();
 		Player p = e.getPlayer();
 
