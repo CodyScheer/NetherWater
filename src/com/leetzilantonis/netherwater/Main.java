@@ -13,14 +13,11 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class Main extends JavaPlugin {
 
-	private static List<String> dWorlds = new ArrayList<String>();
-	private static Main plugin;
+	private List<String> dWorlds = new ArrayList<String>();
 	private WorldGuardPlugin wg;
 
 	@Override
 	public void onEnable() {
-
-		plugin = this;
 		
 		if(!getDataFolder().exists()) getDataFolder().mkdir();
         if(!new File(getDataFolder(), "config.yml").exists()) saveDefaultConfig();
@@ -35,16 +32,16 @@ public class Main extends JavaPlugin {
 
 		}
 
-		this.getServer().getPluginManager().registerEvents(new WaterPlaceListener(), this);
-		this.getCommand("nwreload").setExecutor(new NWReloadCommand());
+		this.getServer().getPluginManager().registerEvents(new WaterPlaceListener(this), this);
+		this.getCommand("nwreload").setExecutor(new NWReloadCommand(this));
 
 	}
 
 	@Override
 	public void onDisable() {
 
-		plugin = null;
-
+		this.saveConfig();
+		
 	}
 
 	private WorldGuardPlugin getWorldGuard() {
@@ -63,10 +60,6 @@ public class Main extends JavaPlugin {
 			return true;
 		}
 		return wg.canBuild(p, b);
-	}
-	
-	public static Main getInstance() {
-		return plugin;
 	}
 
 	public List<String> getWorlds() {
