@@ -12,6 +12,12 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class WaterPlaceListener implements Listener {
 
+	Main plugin;
+
+	public WaterPlaceListener(Main plugin) {
+		this.plugin = plugin;
+	}
+
 	@EventHandler (priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent e) {
 
@@ -28,16 +34,19 @@ public class WaterPlaceListener implements Listener {
 
 			if (p.hasPermission("netherwater.use." + w.getName()) || p.hasPermission("netherwater.use.*")) {
 
-				if (!Main.getInstance().getWorlds().contains(w.getName()) || p.hasPermission("netherwater.world.bypass")) {
+				if (!plugin.getWorlds().contains(w.getName()) || p.hasPermission("netherwater.world.bypass")) {
 
-					if (Main.getInstance().canBuild(p, e.getClickedBlock().getRelative(e.getBlockFace()))) {
-						
-						e.setCancelled(true);
-						e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.WATER);
-						
+					if (plugin.canBuild(p, e.getClickedBlock().getRelative(e.getBlockFace()))) {
+
+						int y = e.getClickedBlock().getRelative(e.getBlockFace()).getY();
+						if (y <= plugin.getConfig().getInt("maxHeight")) {
+							if (y >= plugin.getConfig().getInt("minHeight")) {
+								e.setCancelled(true);
+								e.getClickedBlock().getRelative(e.getBlockFace()).setType(Material.WATER);
+							}
+						}
 					}
 				}
-
 			}
 		}
 	}
