@@ -7,6 +7,12 @@ import org.bukkit.command.CommandSender;
 
 public class NWReloadCommand implements CommandExecutor {
 
+	Main plugin;
+	
+	public NWReloadCommand(Main plugin) {
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -17,7 +23,7 @@ public class NWReloadCommand implements CommandExecutor {
 
 		} else {
 
-			Main.getInstance().reloadConfig();
+			plugin.reloadConfig();
 			sender.sendMessage(ChatColor.GREEN + "Nether Water configuration reloaded!");
 			return true;
 
