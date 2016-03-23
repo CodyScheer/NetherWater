@@ -1,2 +1,4 @@
 disabledWorlds:
   - noWaterWorld
+maxHeight: 999
+minHeight: 0
